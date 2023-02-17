@@ -39,32 +39,34 @@ class OpenAIDetector:
         
         mouseController.position = self.RESULT_POS
         time.sleep(delay)
-        mouseController.press(Button.left)
-        mouseController.release(Button.left)
-        mouseController.press(Button.left)
-        mouseController.release(Button.left)
-        mouseController.press(Button.left)
-        mouseController.release(Button.left)
-        
-        keyboardController.press(key=Key.ctrl_l)
-        keyboardController.press(key='c')
-        keyboardController.release(key=Key.ctrl_l)
-        keyboardController.release(key='c')
-        time.sleep(0.1)
-        
-        result_str = pyperclip.paste().split("to be ")[1].split(" AI-")[0]
-        ai_prob_dict = {
-            "very unlikely":0.1,
-            "unlikely":0.25,
-            "unclear if it is":0.5,
-            "possibly":0.75,
-            "likely":0.9
-        }
-        real_percent=1 - ai_prob_dict[result_str]
+        while True:
+            mouseController.press(Button.left)
+            mouseController.release(Button.left)
+            mouseController.press(Button.left)
+            mouseController.release(Button.left)
+            mouseController.press(Button.left)
+            mouseController.release(Button.left)
+            
+            keyboardController.press(key=Key.ctrl_l)
+            keyboardController.press(key='c')
+            keyboardController.release(key=Key.ctrl_l)
+            keyboardController.release(key='c')
+            time.sleep(0.1)
+            result_str = pyperclip.paste()
+            if "to be" in result_str:
+                result_str = result_str.split("to be ")[1].split(" AI-")[0]
+                ai_prob_dict = {
+                    "very unlikely":0.1,
+                    "unlikely":0.25,
+                    "unclear if it is":0.5,
+                    "possibly":0.75,
+                    "likely":0.9
+                }
+                real_percent=1 - ai_prob_dict[result_str]
 
-        time.sleep(0.1)
+                time.sleep(0.1)
 
-        return [1 - real_percent, real_percent]
+                return [1 - real_percent, real_percent]
 
 # def on_move(x, y):
 #     print('Pointer moved to {0}'.format(

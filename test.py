@@ -42,9 +42,11 @@ victim_name = sys.argv[2]
 
 detector_dict = {"writer":WriterDetector, \
                 "gpt2":GPT2Detector, \
-                "contentatscale":ContentAtScaleDetector, \
+                
                 "corrector": CorrectorDetector, \
                 "openai":OpenAIDetector, \
+
+                "contentatscale":ContentAtScaleDetector, \
 
                 "sapling": SaplingDetector, \
                 "gptkit":GPTKitDetector, \
@@ -74,10 +76,10 @@ if __name__ == "__main__":
             total_cnt += 1
             success_cnt += summary["Attack Success Rate"]
 
-
-            f.write(str(summary["y_orig_list"][0]) + ", " + summary["x_orig_list"][0] + "\n")
-            f.write(str(summary["y_adv_list"][0]) + ", " + summary["x_adv_list"][0] + "\n")
-            f.flush()
+            if summary["Attack Success Rate"] > 0:
+                f.write(str(summary["y_orig_list"][0]) + ", " + summary["x_orig_list"][0] + "\n")
+                f.write(str(summary["y_adv_list"][0]) + ", " + summary["x_adv_list"][0] + "\n")
+                f.flush()
 
             print("===>> ", success_cnt, total_cnt, misclassificatin_cnt, flush=True)
         else:

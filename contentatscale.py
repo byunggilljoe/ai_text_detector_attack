@@ -20,6 +20,11 @@ class ContentAtScaleDetector:
         # find elements by type
         self.page.locator(".check-ai-score").nth(0).click()
         time.sleep(delay)
+        while True:
+            # print(self.page.locator(".det-details").text_content())
+            if self.page.locator(".det-details").text_content().strip().endswith("words."):
+                break
+            time.sleep(0.1)
         percent=float(self.page.locator(".progress-circle").text_content().split("%")[0].strip())/100.0
         return [1-percent, percent]
 
