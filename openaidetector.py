@@ -71,14 +71,20 @@ class OpenAIDetector:
 
                 time.sleep(0.1)
 
-                count += 1
-                if count > MAX_TRIAL:
-                    mouseController.press(Key.f5)
-                    mouseController.release(Key.f5)
-                    return self.get_prob(text)
+                
 
                 return [1 - real_percent, real_percent]
+            else:
+                count += 1
+                if count > MAX_TRIAL:
+                    count = 0
+                    
+                    keyboardController.press(key=Key.ctrl_l)
+                    keyboardController.press(key='r')
+                    keyboardController.release(key=Key.ctrl_l)
+                    keyboardController.release(key='r')
 
+                    return self.get_prob(text)
 # def on_move(x, y):
 #     print('Pointer moved to {0}'.format(
 #         (x, y)))

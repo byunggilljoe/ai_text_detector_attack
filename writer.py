@@ -14,7 +14,16 @@ class WriterDetector:
         self.page = context.new_page()
         self.page.goto(URL)
 
+        self.PROB_REFRESH_COUNT = 1000
+        self.prob_count = 0
+
     def get_prob(self, text, delay=2.0):
+        # refresh not to incur javascript garbage collection error
+        self.prob_count += 1
+        if self.prob_count > self.PROB_REFRESH_COUNT:
+            self.prob_count = 0
+            self.page.reload()
+
         # find elements by property
         self.page.locator(".ai_textbox").fill("")
         self.page.locator(".ai_textbox").click()
