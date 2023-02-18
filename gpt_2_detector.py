@@ -18,11 +18,19 @@ class GPT2Detector:
         # find elements by property
         self.page.locator("[id=\"textbox\"]").fill(text)
         time.sleep(delay)
+
+        MAX_TRIAL = 100
+        count = 0
+
         while True:
             time.sleep(0.5)
             if self.page.locator("[id=\"message\"]").text_content().startswith("Prediction based "):
                 break
             
+            count += 1
+            if count > MAX_TRIAL:
+                self.page.reload()
+                return self.get_prob(text)
         # print()
         real_percent=float(self.page.locator("[id=\"real-percentage\"]").text_content().strip().split("%")[0])/100.0
         return [1 - real_percent, real_percent]

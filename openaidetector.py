@@ -39,6 +39,11 @@ class OpenAIDetector:
         
         mouseController.position = self.RESULT_POS
         time.sleep(delay)
+
+        MAX_TRIAL = 100
+        count = 0
+
+
         while True:
             mouseController.press(Button.left)
             mouseController.release(Button.left)
@@ -62,9 +67,15 @@ class OpenAIDetector:
                     "possibly":0.75,
                     "likely":0.9
                 }
-                real_percent=1 - ai_prob_dict[result_str]
+                real_percent = 1 - ai_prob_dict[result_str]
 
                 time.sleep(0.1)
+
+                count += 1
+                if count > MAX_TRIAL:
+                    mouseController.press(Key.f5)
+                    mouseController.release(Key.f5)
+                    return self.get_prob(text)
 
                 return [1 - real_percent, real_percent]
 

@@ -1,7 +1,7 @@
 import numpy as np
 import time
 from playwright.sync_api import sync_playwright
-
+import code
 class ContentAtScaleDetector:
     def __init__(self):
         URL = "https://contentatscale.ai/ai-content-detector/"
@@ -20,11 +20,19 @@ class ContentAtScaleDetector:
         # find elements by type
         self.page.locator(".check-ai-score").nth(0).click()
         time.sleep(delay)
+        MAX_TRIAL = 100
+        count = 0
         while True:
+            time.sleep(0.1)
             # print(self.page.locator(".det-details").text_content())
             if self.page.locator(".det-details").text_content().strip().endswith("words."):
                 break
-            time.sleep(0.1)
+            
+            count += 1
+            if count > MAX_TRIAL:
+                self.page.reload()
+                return self.get_prob(text)
+
         percent=float(self.page.locator(".progress-circle").text_content().split("%")[0].strip())/100.0
         return [1-percent, percent]
 
@@ -35,7 +43,7 @@ if __name__ == "__main__":
     wd.page.locator(".check-ai-score").nth(0).click()
     time.sleep(5)
     print(float(wd.page.locator(".progress-circle").text_content().split("%")[0].strip())/100.0)
-    
+    code.interact(local=locals())
     while True:
         pass
 

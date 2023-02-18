@@ -71,6 +71,9 @@ if __name__ == "__main__":
     misclassificatin_cnt = 0
     for i in range(len(text_list)):
         ss = text_list[i][:1200].lower()
+        if len(ss) < 1100:
+            print("[BG] Skip because it is too short.")
+            continue
         if label_list[i] == "machine" and victim.get_pred([ss])[0] == 0:
             summary = attack_eval.eval([{"x":ss, "y":0.0}], visualize=True)
             total_cnt += 1
