@@ -99,6 +99,8 @@ if __name__ == "__main__":
             success_cnt += summary["Attack Success Rate"]
 
             if summary["Attack Success Rate"] > 0:
+                f.write("============")
+                f.write(f"index: %{i}, invoke_time: %{summary['Victim Model Queries']}\n")
                 f.write(str(summary["y_orig_list"][0]) + ", " + summary["x_orig_list"][0] + "\n")
                 f.write(str(summary["y_adv_list"][0]) + ", " + summary["x_adv_list"][0] + "\n")
                 f.flush()
