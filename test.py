@@ -18,7 +18,8 @@ from openaidetector import OpenAIDetector
 from data import load_dataset
 
 from OpenAttack.attack_eval.utils import attack_process
-      
+import editdistance
+
 class MyClassifier(oa.Classifier):
     def __init__(self, detector):
         self.model = detector
@@ -89,7 +90,7 @@ if __name__ == "__main__":
 
             sys.exit()
 
-        ss = text_list[i][:1200].lower()
+        ss = text_list[i][:1200].replace("\n", " ").lower()
         if len(ss) < 1100:
             print("[BG] Skip because it is too short.")
             continue
@@ -100,7 +101,9 @@ if __name__ == "__main__":
 
             if summary["Attack Success Rate"] > 0:
                 f.write("============")
-                f.write(f"index: %{i}, invoke_time: %{summary['Victim Model Queries']}\n")
+                # print("summary.keys():", summary.keys())
+                ed = editdistance.eval(summary['x_orig_list'][0], summary['x_adv_list'][0])
+                f.write(f"index: {i}, invoke_time: {summary['Avg. Victim Model Queries']}, edit_dist: {ed}\n")
                 f.write(str(summary["y_orig_list"][0]) + ", " + summary["x_orig_list"][0] + "\n")
                 f.write(str(summary["y_adv_list"][0]) + ", " + summary["x_adv_list"][0] + "\n")
                 f.flush()
