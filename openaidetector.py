@@ -1,14 +1,22 @@
 import numpy as np
 import time
 from playwright.sync_api import sync_playwright
-import pynput
-from pynput.mouse import Button, Controller
-from pynput.keyboard import Key
-from pynput import mouse, keyboard
 import pyperclip
+
+SUPPORTED = True
+try:
+    import pynput
+    from pynput.mouse import Button, Controller
+    from pynput.keyboard import Key
+    from pynput import mouse, keyboard
+except:
+    SUPPORTED = False
 
 class OpenAIDetector:
     def __init__(self):
+        if SUPPORTED == False:
+            print("[BG] pynput is not supported possibly because of non-gui environment")
+            assert(False)
         self.TEXTAREA_POS = (888, 848)
         self.SUBMIT_POS = (406, 1157)
         self.RESULT_POS = (406, 1225)
