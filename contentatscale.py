@@ -8,7 +8,7 @@ class ContentAtScaleDetector:
         
         playwright = sync_playwright().start()
 
-        browser = playwright.chromium.launch(headless=False, channel="msedge")
+        browser = playwright.chromium.launch(headless=True, channel="msedge")
         context = browser.new_context()
 
         self.page = context.new_page()

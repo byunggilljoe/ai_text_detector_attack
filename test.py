@@ -26,12 +26,21 @@ class MyClassifier(oa.Classifier):
     
     def get_pred(self, input_):
         return self.get_prob(input_).argmax(axis=1)
-
+    
+    def remove_tokenize_artifact(self, sent):
+        rep_pair_list = [(" .", "."), (" ?", "?"), (" - ", "-"), (" :", ":"), ("( ", "("), (" )", ")"), (" ’ ", "’"),\
+                         (" ' s", "'s"), ("s ' ", "s' "),  (" '", "'"), (" ,", ","), ("“ ", "“"), (" ”", "”"), ("\" ", "\""),\
+                         (" \"", "\""), (" / ", "/")]
+        for rp in rep_pair_list:
+            sent = sent.replace(rp[0], rp[1])
+        return sent
+    
     # access to the classification probability scores with respect input sentences
     def get_prob(self, input_):
-
+        # preprocess unwanted changes
         ret = []
         for sent in input_:
+            sent = self.remove_tokenize_artifact(sent)
             res = self.model.get_prob(sent)
             # print("[BG] sent:", sent, "res:", res )
             ret.append(res)
@@ -75,7 +84,7 @@ if __name__ == "__main__":
 
     for i in range(start_index, len(text_list)):
         # restart to prevent unkown errors (javascript garbage collection error, reload hangs)
-        if (attack_cnt + misclassificatin_cnt)%101 == 100:
+        if (attack_cnt + misclassificatin_cnt)%11 == 10:
             import shlex
             import subprocess
 
@@ -102,10 +111,11 @@ if __name__ == "__main__":
             if summary["Attack Success Rate"] > 0:
                 f.write("============")
                 # print("summary.keys():", summary.keys())
-                ed = editdistance.eval(summary['x_orig_list'][0], summary['x_adv_list'][0])
+                artifact_removed_adv_example = victim.remove_tokenize_artifact(summary['x_adv_list'][0])
+                ed = editdistance.eval(summary['x_orig_list'][0],  artifact_removed_adv_example)
                 f.write(f"index: {i}, invoke_time: {summary['Avg. Victim Model Queries']}, edit_dist: {ed}\n")
                 f.write(str(summary["y_orig_list"][0]) + ", " + summary["x_orig_list"][0] + "\n")
-                f.write(str(summary["y_adv_list"][0]) + ", " + summary["x_adv_list"][0] + "\n")
+                f.write(str(summary["y_adv_list"][0]) + ", " + artifact_removed_adv_example + "\n")
                 f.flush()
 
             print("===>> ", success_cnt, attack_cnt, attack_cnt+misclassificatin_cnt, flush=True)
