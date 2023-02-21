@@ -28,6 +28,8 @@ class MyClassifier(oa.Classifier):
         return self.get_prob(input_).argmax(axis=1)
     
     def remove_tokenize_artifact(self, sent):
+        # return sent
+    
         rep_pair_list = [(" .", "."), (" ?", "?"), (" - ", "-"), (" :", ":"), ("( ", "("), (" )", ")"), (" ’ ", "’"),\
                          (" ' s", "'s"), ("s ' ", "s' "),  (" '", "'"), (" ,", ","), ("“ ", "“"), (" ”", "”"), ("\" ", "\""),\
                          (" \"", "\""), (" / ", "/")]
@@ -65,7 +67,14 @@ detector_dict = {"writer":WriterDetector, \
 
 attacker_dict = {"hotflip":oa.attackers.HotFlipAttacker, \
                 "genetic":lambda: oa.attackers.GeneticAttacker(pop_size=10, max_iters=100),
-                "gan":oa.attackers.GANAttacker}
+                "gan":oa.attackers.GANAttacker,
+                "pwws":oa.attackers.PWWSAttacker,
+                "pso":oa.attackers.PSOAttacker,
+                "deepwordbug":oa.attackers.DeepWordBugAttacker,
+                "viper":oa.attackers.VIPERAttacker
+                }
+
+
 
 victim = MyClassifier(detector_dict[victim_name]())
 attacker = attacker_dict[attack_name]()
@@ -84,7 +93,7 @@ if __name__ == "__main__":
 
     for i in range(start_index, len(text_list)):
         # restart to prevent unkown errors (javascript garbage collection error, reload hangs)
-        if (attack_cnt + misclassificatin_cnt)%11 == 10:
+        if (attack_cnt + misclassificatin_cnt)%100 == 99:
             import shlex
             import subprocess
 
@@ -120,6 +129,7 @@ if __name__ == "__main__":
 
             print("===>> ", success_cnt, attack_cnt, attack_cnt+misclassificatin_cnt, flush=True)
         else:
+            # print("[BG] misclassified:", ss)
             misclassificatin_cnt += 1
 
     print("===>> ", success_cnt, attack_cnt+misclassificatin_cnt)
