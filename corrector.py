@@ -5,15 +5,15 @@ from playwright.sync_api import sync_playwright
 
 class CorrectorDetector:
     def __init__(self):
-        URL = "https://corrector.app/ai-content-detector/"
+        self.URL = "https://corrector.app/ai-content-detector/"
         
         playwright = sync_playwright().start()
 
         browser = playwright.chromium.launch(headless=True, channel="msedge")
-        context = browser.new_context()
+        self.context = browser.new_context()
 
-        self.page = context.new_page()
-        self.page.goto(URL)
+        self.page = self.context.new_page()
+        self.page.goto(self.URL)
 
     def get_prob(self, text, delay=0.5):
         # find elements by property
@@ -31,7 +31,10 @@ class CorrectorDetector:
             
             count += 1
             if count > MAX_TRIAL:
-                self.page.reload()
+                self.page.close()
+
+                self.page = self.context.new_page()
+                self.page.goto(self.URL)
                 return self.get_prob(text)
             
         # print()
