@@ -15,13 +15,26 @@ class CorrectorDetector:
         self.page = self.context.new_page()
         self.page.goto(self.URL)
 
+        self.PROB_REFRESH_COUNT = 5
+        self.prob_count = 0
+
     def get_prob(self, text, delay=0.5):
+        # refresh not to incur javascript garbage collection error
+        self.prob_count += 1
+        if self.prob_count > self.PROB_REFRESH_COUNT:
+            self.prob_count = 0
+            self.page.close()
+
+            self.page = self.context.new_page()
+            self.page.goto(self.URL)
+
         # find elements by property
         self.page.locator("[id=\"checktext\"]").fill("")
         time.sleep(delay)
         self.page.locator("[id=\"checktext\"]").fill(text)
         
-        MAX_TRIAL = 100
+        
+        MAX_TRIAL = 5
         count = 0
 
         while True:
@@ -31,10 +44,7 @@ class CorrectorDetector:
             
             count += 1
             if count > MAX_TRIAL:
-                self.page.close()
-
-                self.page = self.context.new_page()
-                self.page.goto(self.URL)
+                self.page.reload()
                 return self.get_prob(text)
             
         # print()
