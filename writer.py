@@ -4,17 +4,17 @@ from playwright.sync_api import sync_playwright
 
 class WriterDetector:
     def __init__(self):
-        URL = "https://writer.com/ai-content-detector/"
+        self.URL = "https://writer.com/ai-content-detector/"
         
         playwright = sync_playwright().start()
 
         browser = playwright.chromium.launch(headless=True, channel="msedge")
-        context = browser.new_context()
+        self.context = browser.new_context()
 
-        self.page = context.new_page()
-        self.page.goto(URL)
+        self.page = self.context.new_page()
+        self.page.goto(self.URL)
 
-        self.PROB_REFRESH_COUNT = 1000
+        self.PROB_REFRESH_COUNT = 5
         self.prob_count = 0
 
     def get_prob(self, text, delay=2.0):
@@ -22,7 +22,11 @@ class WriterDetector:
         self.prob_count += 1
         if self.prob_count > self.PROB_REFRESH_COUNT:
             self.prob_count = 0
-            self.page.reload()
+            self.page.close()
+
+            self.page = self.context.new_page()
+            self.page.goto(self.URL)
+
 
         # find elements by property
         self.page.locator(".ai_textbox").fill("")
