@@ -28,6 +28,8 @@ class MyClassifier(oa.Classifier):
         return self.get_prob(input_).argmax(axis=1)
     
     def remove_tokenize_artifact(self, sent):
+        # return sent
+    
         rep_pair_list = [(" .", "."), (" ?", "?"), (" - ", "-"), (" :", ":"), ("( ", "("), (" )", ")"), (" ’ ", "’"),\
                          (" ' s", "'s"), ("s ' ", "s' "),  (" '", "'"), (" ,", ","), ("“ ", "“"), (" ”", "”"), ("\" ", "\""),\
                          (" \"", "\""), (" / ", "/")]
@@ -66,11 +68,15 @@ detector_dict = {"writer":WriterDetector, \
 attacker_dict = {"hotflip":oa.attackers.HotFlipAttacker, \
                 "genetic":lambda: oa.attackers.GeneticAttacker(pop_size=10, max_iters=100),
                 "gan":oa.attackers.GANAttacker,
-                "pwws":oa.attackers.PWWSAttacker,}
+                "pwws":oa.attackers.PWWSAttacker,
+                "pso":oa.attackers.PSOAttacker,
+                "deepwordbug":oa.attackers.DeepWordBugAttacker,
+                "viper":oa.attackers.VIPERAttacker
+                }
 
 victim = MyClassifier(detector_dict[victim_name]())
 attacker = attacker_dict[attack_name]()
-attack_eval = oa.AttackEval(attacker, victim, invoke_limit=200)
+attack_eval = oa.AttackEval(attacker, victim, invoke_limit=400)
 
 # attack_eval.eval([{"x":"Yes, I am aware of ACT-1 (Adaptive Computation Time) from OpenAI's Adept project. It is a method for dynamically controlling the computation time of AI models, such as GPT-3, to balance speed and accuracy. The aim of ACT-1 is to provide a more efficient and effective use of computational resources in real-world applications, by allowing the model to allocate more or less time to processing a task based on its complexity and the available computational resources. By doing this, ACT-1 helps to reduce energy consumption, lower latency, and increase the overall performance of AI models.", "y":0.0}], visualize=True)
 # attack_eval.eval([{"x":"Personal injury law is an area of the law that deals with cases involving physical or psychological harm caused by another person, company, government agency, or other entity. It covers a wide range of legal issues, from medical malpractice to car accidents to workplace injuries. In this blog post, we’ll take a look at what personal injury law entails and how it can help you if you’ve been injured due to someone else’s negligence. First and foremost, personal injury law is designed to provide compensation for victims who have suffered physical or psychological harm due to another party’s negligence. This includes both economic damages (such as medical bills and lost wages) and non-economic damages (such as pain and suffering). The goal of personal injury law is to make sure that victims are made whole again after an accident or incident.", "y":0.0}], visualize=True)
@@ -85,7 +91,7 @@ if __name__ == "__main__":
 
     for i in range(start_index, len(text_list)):
         # restart to prevent unkown errors (javascript garbage collection error, reload hangs)
-        if (attack_cnt + misclassificatin_cnt)%11 == 10:
+        if (attack_cnt + misclassificatin_cnt)%100 == 99:
             import shlex
             import subprocess
 
@@ -121,6 +127,7 @@ if __name__ == "__main__":
 
             print("===>> ", success_cnt, attack_cnt, attack_cnt+misclassificatin_cnt, flush=True)
         else:
+            # print("[BG] misclassified:", ss)
             misclassificatin_cnt += 1
 
     print("===>> ", success_cnt, attack_cnt+misclassificatin_cnt)

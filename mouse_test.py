@@ -21,30 +21,27 @@ class OpenAIDetector:
         self.SUBMIT_POS = (652, 1208)
         self.RESULT_POS = (652, 1270)
 
-    def get_prob(self, text, delay=5.0):
+    def get_prob(self, text, delay=5):
         pyperclip.copy(text)
         mouseController = mouse.Controller()
         keyboardController = keyboard.Controller()
         
         mouseController.position = self.TEXTAREA_POS
-        time.sleep(0.1)
         mouseController.press(Button.left)
         mouseController.release(Button.left)
-        time.sleep(0.1)
+
         keyboardController.press(key=Key.ctrl_l)
         keyboardController.press(key='a')
-        time.sleep(0.1)
         keyboardController.release(key=Key.ctrl_l)
         keyboardController.release(key='a')
         time.sleep(0.1)
         keyboardController.press(key=Key.ctrl_l)
         keyboardController.press(key='v')
-        time.sleep(0.1)
         keyboardController.release(key=Key.ctrl_l)
         keyboardController.release(key='v')
 
         mouseController.position = self.SUBMIT_POS
-        time.sleep(0.1)
+        sys.exit(0)        
         mouseController.press(Button.left)
         mouseController.release(Button.left)
         
@@ -65,7 +62,6 @@ class OpenAIDetector:
             
             keyboardController.press(key=Key.ctrl_l)
             keyboardController.press(key='c')
-            time.sleep(0.1)
             keyboardController.release(key=Key.ctrl_l)
             keyboardController.release(key='c')
             time.sleep(0.1)
@@ -95,39 +91,8 @@ class OpenAIDetector:
                     keyboardController.press(key='r')
                     keyboardController.release(key=Key.ctrl_l)
                     keyboardController.release(key='r')
-                    time.sleep(5)
+
                     return self.get_prob(text)
-# def on_move(x, y):
-#     print('Pointer moved to {0}'.format(
-#         (x, y)))
-
-# def on_click(x, y, button, pressed):
-#     print('{0} at {1}'.format(
-#         'Pressed' if pressed else 'Released',
-#         (x, y)))
-#     if not pressed:
-#         # Stop listener
-#         return False
-
-# def on_scroll(x, y, dx, dy):
-#     print('Scrolled {0} at {1}'.format(
-#         'down' if dy < 0 else 'up',
-#         (x, y)))
-
-# # Collect events until released
-# with mouse.Listener(
-#         on_move=on_move,
-#         on_click=on_click,
-#         on_scroll=on_scroll) as listener:
-#     listener.join()
-
-# # ...or, in a non-blocking fashion:
-# listener = mouse.Listener(
-#     on_move=on_move,
-#     on_click=on_click,
-#     on_scroll=on_scroll)
-# listener.start()
-
 
 
 # 0. clipboard edit
@@ -143,6 +108,38 @@ class OpenAIDetector:
 # 7. Ctrl + C
 
 if __name__ == "__main__":
-    wd = OpenAIDetector()
-    p = wd.get_prob("Yes, I am aware of ACT-1 (Adaptive Computation Time) from OpenAI's Adept project. It is a method for dynamically controlling the computation time of AI models, such as GPT-3, to balance speed and accuracy. The aim of ACT-1 is to provide a more efficient and effective use of computational resources in real-world applications, by allowing the model to allocate more or less time to processing a task based on its complexity and the available computational resources. By doing this, ACT-1 helps to reduce energy consumption, lower latency, and increase the overall performance of AI models. Yes, I am aware of ACT-1 (Adaptive Computation Time) from OpenAI's Adept project. It is a method for dynamically controlling the computation time of AI models, such as GPT-3, to balance speed and accuracy. The aim of ACT-1 is to provide a more efficient and effective use of computational resources in real-world applications, by allowing the model to allocate more or less time to processing a task based on its complexity and the available computational resources. By doing this, ACT-1 helps to reduce energy consumption, lower latency, and increase the overall performance of AI models.")
-    print(p)
+    def on_move(x, y):
+        print('Pointer moved to {0}'.format(
+            (x, y)))
+
+    def on_click(x, y, button, pressed):
+        print('{0} at {1}'.format(
+            'Pressed' if pressed else 'Released',
+            (x, y)))
+        if not pressed:
+            # Stop listener
+            return False
+
+    def on_scroll(x, y, dx, dy):
+        print('Scrolled {0} at {1}'.format(
+            'down' if dy < 0 else 'up',
+            (x, y)))
+
+    # Collect events until released
+    with mouse.Listener(
+            on_move=on_move,
+            on_click=on_click,
+            on_scroll=on_scroll) as listener:
+        listener.join()
+
+    # ...or, in a non-blocking fashion:
+    listener = mouse.Listener(
+        on_move=on_move,
+        on_click=on_click,
+        on_scroll=on_scroll)
+    listener.start()
+
+
+    # wd = OpenAIDetector()
+    # p = wd.get_prob("Yes, I am aware of ACT-1 (Adaptive Computation Time) from OpenAI's Adept project. It is a method for dynamically controlling the computation time of AI models, such as GPT-3, to balance speed and accuracy. The aim of ACT-1 is to provide a more efficient and effective use of computational resources in real-world applications, by allowing the model to allocate more or less time to processing a task based on its complexity and the available computational resources. By doing this, ACT-1 helps to reduce energy consumption, lower latency, and increase the overall performance of AI models. Yes, I am aware of ACT-1 (Adaptive Computation Time) from OpenAI's Adept project. It is a method for dynamically controlling the computation time of AI models, such as GPT-3, to balance speed and accuracy. The aim of ACT-1 is to provide a more efficient and effective use of computational resources in real-world applications, by allowing the model to allocate more or less time to processing a task based on its complexity and the available computational resources. By doing this, ACT-1 helps to reduce energy consumption, lower latency, and increase the overall performance of AI models.")
+    # print(p)
