@@ -46,6 +46,7 @@ class CorrectorDetector:
             if count > MAX_TRIAL:
                 self.page.reload()
                 return self.get_prob(text)
+            time.sleep(2)
             
         # print()
         real_percent=1-float(self.page.locator("[id=\"fakeo\"]").text_content().strip().split("%")[0].split(" ")[1])/100.0
