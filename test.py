@@ -14,6 +14,7 @@ from writer import WriterDetector
 from corrector import CorrectorDetector
 from sapling import SaplingDetector
 from openaidetector import OpenAIDetector
+from grover import GroverDetector
 
 from data import load_dataset
 
@@ -58,7 +59,7 @@ detector_dict = {"writer":WriterDetector, \
                 
                 "corrector": CorrectorDetector, \
                 "openai":OpenAIDetector, \
-
+                "grover": GroverDetector, \
                 "contentatscale":ContentAtScaleDetector, \
 
                 "sapling": SaplingDetector, \
@@ -112,6 +113,7 @@ if __name__ == "__main__":
             continue
         if label_list[i] == "machine" and victim.get_pred([ss])[0] == 0:
             summary = attack_eval.eval([{"x":ss, "y":0.0}], visualize=True)
+            # summary = {"Attack Success Rate": 0}
             attack_cnt += 1
             success_cnt += summary["Attack Success Rate"]
 
@@ -126,7 +128,7 @@ if __name__ == "__main__":
                 f.flush()
 
             print("===>> ", success_cnt, attack_cnt, attack_cnt+misclassificatin_cnt, flush=True)
-        else:
+        elif label_list[i] == "machine":
             # print("[BG] misclassified:", ss)
             misclassificatin_cnt += 1
 
