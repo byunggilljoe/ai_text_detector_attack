@@ -65,7 +65,8 @@ detector_dict = {"writer":WriterDetector, \
 
 attacker_dict = {"hotflip":oa.attackers.HotFlipAttacker, \
                 "genetic":lambda: oa.attackers.GeneticAttacker(pop_size=10, max_iters=100),
-                "gan":oa.attackers.GANAttacker}
+                "gan":oa.attackers.GANAttacker,
+                "pwws":oa.attackers.PWWSAttacker,}
 
 victim = MyClassifier(detector_dict[victim_name]())
 attacker = attacker_dict[attack_name]()
